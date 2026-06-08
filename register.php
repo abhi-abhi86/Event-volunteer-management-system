@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
             $stmt = $pdo->prepare('INSERT INTO volunteers (full_name, email, phone, password) VALUES (?, ?, ?, ?)');
-            $stmt->execute([$fullName, $email, $phone, $hashedPassword]);
+            $stmt->execute([$fullName, $email, $normalizedPhone, $hashedPassword]);
             $message = 'Registration successful. You can now participate in events.';
         } catch (PDOException $e) {
             if (isset($e->errorInfo[0]) && $e->errorInfo[0] === '23000') {
