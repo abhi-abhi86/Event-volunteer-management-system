@@ -10,5 +10,6 @@ try {
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     ]);
 } catch (PDOException $e) {
-    die('Database connection failed: ' . htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8'));
+    error_log('Database connection failed: ' . $e->getMessage());
+    die('Database connection failed. Please try again later.');
 }

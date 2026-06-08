@@ -1,7 +1,8 @@
 <?php
 require_once 'db_connect.php';
 
-$stmt = $pdo->query('SELECT title, description, event_date, location FROM events WHERE event_date >= CURDATE() ORDER BY event_date ASC');
+$stmt = $pdo->prepare('SELECT title, description, event_date, location FROM events WHERE event_date >= CURDATE() ORDER BY event_date ASC');
+$stmt->execute();
 $events = $stmt->fetchAll();
 ?>
 <!DOCTYPE html>

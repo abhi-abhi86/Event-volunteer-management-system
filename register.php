@@ -14,6 +14,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'All fields are required.';
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = 'Please enter a valid email address.';
+    } elseif (strlen($password) < 8) {
+        $error = 'Password must be at least 8 characters long.';
     } else {
         try {
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
