@@ -1,9 +1,17 @@
 <?php
 require_once 'db_connect.php';
 
-$stmt = $pdo->prepare('SELECT title, description, event_date, location FROM events WHERE event_date >= CURDATE() ORDER BY event_date ASC');
-$stmt->execute();
-$events = $stmt->fetchAll();
+$events = [];
+$error = '';
+
+try {
+    $stmt = $pdo->prepare('SELECT title, description, event_date, location FROM events WHERE event_date >= CURDATE() ORDER BY event_date ASC');
+    $stmt->execute();
+    $events = $stmt->fetchAll();
+} catch (PDOException $e) {
+    error_log('Failed fetching events: ' . $e->getMessage());
+    $error = 'Unable to load events right now. Please try again later.';
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -84,7 +92,10 @@ $events = $stmt->fetchAll();
         <h1>Upcoming Events</h1>
         <p class="intro">Discover where your support can make the biggest difference.</p>
 
-        <?php if (count($events) > 0): ?>
+        <?php if ($error !== ''): ?>
+            <div class="empty"><?php echo htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?></div>
+        <?php elseif (count($events) > 0): ?>
+
             <section class="grid">
                 <?php foreach ($events as $event): ?>
                     <article class="card">

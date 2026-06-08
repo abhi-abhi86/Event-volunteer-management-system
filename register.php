@@ -8,12 +8,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $fullName = trim($_POST['full_name'] ?? '');
     $email = trim($_POST['email'] ?? '');
     $phone = trim($_POST['phone'] ?? '');
+    $normalizedPhone = preg_replace('/[\s-]+/', '', $phone);
     $password = $_POST['password'] ?? '';
 
     if ($fullName === '' || $email === '' || $phone === '' || $password === '') {
         $error = 'All fields are required.';
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = 'Please enter a valid email address.';
+    } elseif (!preg_match('/^\+?[0-9]{7,15}$/', $normalizedPhone)) {
+        $error = 'Please enter a valid phone number.';
     } elseif (strlen($password) < 8) {
         $error = 'Password must be at least 8 characters long.';
     } else {
@@ -23,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute([$fullName, $email, $phone, $hashedPassword]);
             $message = 'Registration successful. You can now participate in events.';
         } catch (PDOException $e) {
-            if ($e->getCode() === '23000') {
+            if (isset($e->errorInfo[0]) && $e->errorInfo[0] === '23000') {
                 $error = 'This email is already registered.';
             } else {
                 $error = 'A system error occurred during registration. Please try again later.';
