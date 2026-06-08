@@ -23,10 +23,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute([$fullName, $email, $phone, $hashedPassword]);
             $message = 'Registration successful. You can now participate in events.';
         } catch (PDOException $e) {
-            if ((int) $e->getCode() === 23000) {
+            if ($e->getCode() === '23000') {
                 $error = 'This email is already registered.';
             } else {
-                $error = 'Unable to register at the moment. Please try again.';
+                $error = 'A system error occurred during registration. Please try again later.';
             }
         }
     }
