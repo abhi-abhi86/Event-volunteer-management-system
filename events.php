@@ -102,3 +102,4 @@ $events = $stmt->fetchAll();
     </main>
 </body>
 </html>
+

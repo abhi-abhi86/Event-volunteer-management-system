@@ -34,3 +34,4 @@ CREATE TABLE IF NOT EXISTS event_registrations (
     CONSTRAINT fk_registration_volunteer FOREIGN KEY (volunteer_id) REFERENCES volunteers(id) ON DELETE CASCADE,
     CONSTRAINT fk_registration_event FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE
 );
+
