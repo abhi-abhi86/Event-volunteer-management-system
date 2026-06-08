@@ -79,6 +79,24 @@ $events = $stmt->fetchAll();
             padding: 28px;
             box-shadow: 0 12px 24px rgba(13, 27, 61, 0.1);
         }
+        .cardHead{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:12px;
+            margin-bottom:10px;
+        }
+        .pill{
+            font-size:0.75rem;
+            font-weight:900;
+            letter-spacing:0.08em;
+            text-transform:uppercase;
+            padding:8px 10px;
+            border-radius:999px;
+            background: rgba(30,199,160,0.12);
+            color: #0f7f65;
+            border:1px solid rgba(30,199,160,0.35);
+        }
         .back {
             display:inline-block;
             text-decoration:none;
@@ -112,7 +130,13 @@ $events = $stmt->fetchAll();
             <section class="grid">
                 <?php foreach ($events as $event): ?>
 <article class="card">
-                        <h2 class="title"><?php echo htmlspecialchars($event['title'], ENT_QUOTES, 'UTF-8'); ?></h2>
+                        <div class="cardHead">
+                            <div>
+                                <h2 class="title"><?php echo htmlspecialchars($event['title'], ENT_QUOTES, 'UTF-8'); ?></h2>
+                            </div>
+                            <span class="pill">UPCOMING</span>
+                        </div>
+
                         <div class="meta">
                             <span>Date: <?php echo htmlspecialchars(date('d M Y', strtotime($event['event_date'])), ENT_QUOTES, 'UTF-8'); ?></span>
                             <span>Location: <?php echo htmlspecialchars($event['location'], ENT_QUOTES, 'UTF-8'); ?></span>
