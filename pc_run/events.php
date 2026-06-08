@@ -1,7 +1,10 @@
 <?php
+session_start();
 require_once 'db_connect.php';
 
-$stmt = $pdo->query('SELECT title, description, event_date, location FROM events WHERE event_date >= CURDATE() ORDER BY event_date ASC');
+$volunteerId = isset($_SESSION['volunteer_id']) ? (int)$_SESSION['volunteer_id'] : 0;
+
+$stmt = $pdo->query('SELECT id, title, description, event_date, location FROM events WHERE event_date >= CURDATE() ORDER BY event_date ASC');
 $events = $stmt->fetchAll();
 ?>
 <!DOCTYPE html>
@@ -76,23 +79,50 @@ $events = $stmt->fetchAll();
             padding: 28px;
             box-shadow: 0 12px 24px rgba(13, 27, 61, 0.1);
         }
+        .back {
+            display:inline-block;
+            text-decoration:none;
+            padding:10px 16px;
+            border-radius:10px;
+            color:#fff;
+            font-weight:800;
+            transition: transform .2s ease, box-shadow .2s ease;
+            box-shadow: 0 10px 20px rgba(13, 27, 61, 0.08);
+        }
+        .back:hover { transform: translateY(-2px); }
+
     </style>
 </head>
 <body>
-    <main class="wrap">
+<main class="wrap">
         <h1>Upcoming Events</h1>
         <p class="intro">Discover where your support can make the biggest difference.</p>
+        <div class="topbar" style="text-align:center; margin-bottom:18px;">
+            <?php if ($volunteerId > 0): ?>
+                <span style="color:#2d4da0; font-weight:800;">Logged in</span>
+                <a class="back" href="logout.php" style="margin-left:12px; background:#0d1b3d;">Logout</a>
+            <?php else: ?>
+                <a class="back" href="volunteer_login.php" style="background:#0d1b3d;">Volunteer Login</a>
+            <?php endif; ?>
+            <a class="back" href="register.php" style="margin-left:12px; background:#1ec7a0;">Register</a>
+        </div>
+
 
         <?php if (count($events) > 0): ?>
             <section class="grid">
                 <?php foreach ($events as $event): ?>
-                    <article class="card">
+<article class="card">
                         <h2 class="title"><?php echo htmlspecialchars($event['title'], ENT_QUOTES, 'UTF-8'); ?></h2>
                         <div class="meta">
                             <span>Date: <?php echo htmlspecialchars(date('d M Y', strtotime($event['event_date'])), ENT_QUOTES, 'UTF-8'); ?></span>
                             <span>Location: <?php echo htmlspecialchars($event['location'], ENT_QUOTES, 'UTF-8'); ?></span>
                         </div>
                         <p class="desc"><?php echo nl2br(htmlspecialchars($event['description'], ENT_QUOTES, 'UTF-8')); ?></p>
+
+                        <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between;">
+                            <a class="back" href="volunteer_login.php" style="background:#2d4da0;">Login to Register</a>
+                            <a class="back" href="register_event.php?event_id=<?php echo (int)$event['id']; ?>" style="background:#1ec7a0;">Register</a>
+                        </div>
                     </article>
                 <?php endforeach; ?>
             </section>
