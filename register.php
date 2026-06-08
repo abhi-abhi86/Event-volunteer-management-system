@@ -29,6 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (isset($e->errorInfo[0]) && $e->errorInfo[0] === '23000') {
                 $error = 'This email is already registered.';
             } else {
+                error_log('Volunteer registration failed: ' . $e->getMessage());
                 $error = 'A system error occurred during registration. Please try again later.';
             }
         }
